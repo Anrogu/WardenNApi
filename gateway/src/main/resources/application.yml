@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: warden-gateway
+  r2dbc:
+    url: ${POSTGRES_R2DBC_URL:r2dbc:postgresql://postgres:5432/warden}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
   cloud:
     gateway:
       server:

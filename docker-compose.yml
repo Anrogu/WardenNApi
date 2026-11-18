@@ -11,8 +11,13 @@ services:
       JWT_ISSUER: ${JWT_ISSUER:-warden-api}
       JWT_AUDIENCE: ${JWT_AUDIENCE:-warden-gateway}
       DEMO_API_URI: http://demo-api:8082
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_R2DBC_URL: r2dbc:postgresql://postgres:5432/${POSTGRES_DB:-warden}
     depends_on:
       demo-api:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'" ]
@@ -25,8 +30,6 @@ services:
     build:
       context: .
       dockerfile: demo-api/Dockerfile
-    ports:
-      - "127.0.0.1:8082:8082"
     depends_on:
       postgres:
         condition: service_healthy
