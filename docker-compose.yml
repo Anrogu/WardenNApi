@@ -7,6 +7,9 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     environment:
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      JWT_ISSUER: ${JWT_ISSUER:-warden-api}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-warden-gateway}
       DEMO_API_URI: http://demo-api:8082
     depends_on:
       demo-api:
