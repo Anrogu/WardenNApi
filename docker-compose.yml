@@ -1,5 +1,23 @@
 name: warden
 services:
+  demo-api:
+    build:
+      context: .
+      dockerfile: demo-api/Dockerfile
+    ports:
+      - "127.0.0.1:8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8082/actuator/health | grep -q '\"status\":\"UP\"'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
   redis:
     image: redis:7.4-alpine
     ports:
