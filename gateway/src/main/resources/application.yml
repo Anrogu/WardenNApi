@@ -2,8 +2,15 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: warden-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: demo-api
+              uri: ${DEMO_API_URI:http://localhost:8082}
+              predicates:
+                - Path=/api/**
 
 management:
   endpoints:
